@@ -8,844 +8,750 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128218;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
   --bg: #fafaf9;
+  --bg-alt: #f5f5f4;
   --bg-card: #ffffff;
-  --bg-card-hover: #f5f5f4;
-  --bg-code: #f0efed;
+  --bg-code: #1e1e2e;
   --text: #1c1917;
-  --text-dim: #78716c;
+  --text-2: #57534e;
+  --text-3: #a8a29e;
   --accent: #ea580c;
-  --accent-glow: rgba(234, 88, 12, 0.08);
-  --accent-hover: #f97316;
+  --accent-bg: rgba(234,88,12,0.06);
   --green: #16a34a;
+  --green-bg: rgba(22,163,74,0.06);
   --red: #dc2626;
+  --red-bg: rgba(220,38,38,0.06);
   --blue: #2563eb;
+  --blue-bg: rgba(37,99,235,0.06);
   --border: #e7e5e4;
-  --code-text: #16a34a;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-card-hover: 0 8px 25px rgba(0,0,0,0.08);
-  --font-display: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Outfit', system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0a0a0f;
-    --bg-card: #12121a;
-    --bg-card-hover: #1a1a28;
-    --bg-code: #0d0d14;
-    --text: #e8e6e3;
-    --text-dim: #8a8895;
-    --accent: #ff6b35;
-    --accent-glow: rgba(255, 107, 53, 0.15);
-    --accent-hover: #ff8555;
+    --bg: #09090b;
+    --bg-alt: #18181b;
+    --bg-card: #1c1c22;
+    --bg-code: #0c0c14;
+    --text: #fafaf9;
+    --text-2: #a1a1aa;
+    --text-3: #52525b;
+    --accent: #fb923c;
+    --accent-bg: rgba(251,146,60,0.1);
     --green: #4ade80;
+    --green-bg: rgba(74,222,128,0.08);
     --red: #f87171;
+    --red-bg: rgba(248,113,113,0.08);
     --blue: #60a5fa;
-    --border: #2a2a3a;
-    --code-text: #4ade80;
-    --shadow-card: none;
-    --shadow-card-hover: 0 10px 30px rgba(0,0,0,0.3);
+    --blue-bg: rgba(96,165,250,0.08);
+    --border: #27272a;
+    --shadow: none;
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.4);
   }
 }
 
 html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--font-display);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
+body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* --- Lang switcher --- */
-.lang-switch {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 100;
-  display: flex;
-  gap: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--bg-card);
-  box-shadow: var(--shadow-card);
+/* --- Nav --- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 2rem;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
-.lang-switch button {
-  padding: 0.4rem 0.8rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  border: none;
-  background: transparent;
-  color: var(--text-dim);
-  cursor: pointer;
-  transition: all 0.2s;
+.nav-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+  display: flex; align-items: center; gap: 0.5rem;
 }
 
-.lang-switch button.active {
-  background: var(--accent);
-  color: #fff;
+.nav-brand:hover { text-decoration: none; }
+
+.lang-menu {
+  display: flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
 }
 
-.lang-switch button:not(.active):hover {
-  background: var(--bg-card-hover);
+.lang-menu button {
+  padding: 0.3rem 0.6rem; border: none; background: transparent;
+  font-family: var(--mono); font-size: 0.7rem; color: var(--text-3);
+  cursor: pointer; transition: all 0.15s;
 }
+
+.lang-menu button.active { background: var(--accent); color: #fff; }
+.lang-menu button:not(.active):hover { background: var(--bg-alt); color: var(--text-2); }
+
+/* --- Container --- */
+.container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
 
 /* --- Hero --- */
 .hero {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
-  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 6rem 2rem 4rem;
 }
 
-.hero::after {
-  content: '';
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
+.hero-inner { max-width: 720px; }
 
-.hero-content { position: relative; z-index: 1; max-width: 800px; }
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-bottom: 2rem;
-  animation: fadeUp 0.8s ease both;
-  background: var(--bg-card);
-}
-
-.badge-dot {
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-h1 {
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 900;
-  line-height: 1;
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 900; line-height: 1.05;
   letter-spacing: -0.03em;
-  margin-bottom: 1.5rem;
-  animation: fadeUp 0.8s 0.1s ease both;
+  margin-bottom: 1.2rem;
 }
 
-h1 .highlight {
-  background: linear-gradient(135deg, var(--accent), #ff9a6c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--accent), #f97316);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.hero-sub {
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  font-weight: 300;
-  color: var(--text-dim);
-  max-width: 600px;
-  margin: 0 auto 2.5rem;
-  animation: fadeUp 0.8s 0.2s ease both;
+.hero p {
+  font-size: 1.2rem; font-weight: 300; color: var(--text-2);
+  max-width: 520px; margin: 0 auto 2rem;
 }
 
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  animation: fadeUp 0.8s 0.3s ease both;
-}
+.hero-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.8rem;
-  border-radius: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.75rem 1.5rem; border-radius: 8px;
+  font-family: var(--mono); font-size: 0.85rem; font-weight: 600;
+  border: 1px solid transparent; cursor: pointer; transition: all 0.2s;
 }
 
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-}
-.btn-primary:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.3);
-  text-decoration: none;
-}
-
-.btn-ghost {
-  background: var(--bg-card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover {
-  border-color: var(--accent);
-  text-decoration: none;
-  transform: translateY(-1px);
-}
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); text-decoration: none; }
+.btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-outline:hover { border-color: var(--accent); text-decoration: none; }
 
 /* --- Sections --- */
-section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+.section { padding: 5rem 0; }
+.section-alt { background: var(--bg-alt); padding: 5rem 0; }
 
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  margin-bottom: 1rem;
+.section-head { margin-bottom: 3rem; }
+.section-head .label {
+  font-family: var(--mono); font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--accent); margin-bottom: 0.5rem;
 }
+.section-head h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem;
+}
+.section-head p { font-size: 1.05rem; color: var(--text-2); max-width: 560px; }
 
-h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-}
+/* --- Cards grid --- */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-.section-desc {
-  font-size: 1.1rem;
-  color: var(--text-dim);
-  max-width: 600px;
-  margin-bottom: 3rem;
+.card {
+  padding: 1.5rem; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg-card);
+  box-shadow: var(--shadow); transition: all 0.25s;
 }
-
-/* --- Problem --- */
-.problem-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.problem-card {
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  box-shadow: var(--shadow-card);
-  transition: all 0.3s;
-}
-.problem-card:hover {
-  background: var(--bg-card-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.problem-card .icon { font-size: 1.5rem; margin-bottom: 1rem; }
-.problem-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
-.problem-card p { color: var(--text-dim); font-size: 0.95rem; }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.card .icon { font-size: 1.3rem; margin-bottom: 0.8rem; }
+.card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+.card p { font-size: 0.9rem; color: var(--text-2); }
 
 /* --- Compare --- */
-.compare {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+.cmp {
+  padding: 1.5rem; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg-card);
+  box-shadow: var(--shadow);
 }
 
-.compare-panel {
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  box-shadow: var(--shadow-card);
+.cmp-title {
+  font-family: var(--mono); font-size: 0.8rem; font-weight: 600;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;
 }
 
-.compare-panel h3 {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.cmp-bad .cmp-title { color: var(--red); }
+.cmp-good .cmp-title { color: var(--green); }
+
+.cmp ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.cmp li { font-size: 0.88rem; color: var(--text-2); padding-left: 1.2rem; position: relative; }
+.cmp-bad li::before { content: '\2717'; position: absolute; left: 0; color: var(--red); font-weight: 700; }
+.cmp-good li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+/* --- Layers --- */
+.layers { max-width: 600px; margin: 0 auto; }
+
+.layer {
+  padding: 1.2rem 1.5rem; border: 1px solid var(--border);
+  text-align: center; transition: all 0.2s;
 }
+.layer:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+.layer:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+.layer:not(:last-child) { border-bottom: none; }
+.layer:hover { transform: scale(1.01); }
 
-.compare-panel.bad h3 { color: var(--red); }
-.compare-panel.good h3 { color: var(--green); }
+.layer h3 { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
+.layer p { font-size: 0.82rem; color: var(--text-2); }
 
-.compare-panel ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.layer-fw { background: var(--green-bg); }
+.layer-fw h3 { color: var(--green); }
+.layer-lang { background: var(--blue-bg); }
+.layer-lang h3 { color: var(--blue); }
+.layer-base { background: var(--accent-bg); }
+.layer-base h3 { color: var(--accent); }
 
-.compare-panel li {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  padding-left: 1.2rem;
-  position: relative;
+/* --- Tags --- */
+.tags-wrap { text-align: center; }
+.tags-label {
+  font-family: var(--mono); font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-3); margin-bottom: 0.8rem;
 }
+.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; }
 
-.compare-panel.bad li::before { content: '\2717'; position: absolute; left: 0; color: var(--red); font-weight: 700; }
-.compare-panel.good li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
-
-/* --- Architecture --- */
-.arch-layers { display: flex; flex-direction: column; max-width: 700px; margin: 0 auto; }
-
-.arch-layer {
-  padding: 1.5rem 2rem;
-  border: 1px solid var(--border);
-  text-align: center;
-  transition: all 0.3s;
-  cursor: default;
+.tag {
+  padding: 0.4rem 1rem; border-radius: 100px;
+  font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+  border: 1px solid var(--border); background: var(--bg-card);
+  box-shadow: var(--shadow); transition: all 0.2s; cursor: default;
 }
-.arch-layer:first-child { border-radius: 12px 12px 0 0; }
-.arch-layer:last-child { border-radius: 0 0 12px 12px; }
-.arch-layer:not(:last-child) { border-bottom: none; }
-.arch-layer:hover { transform: scale(1.01); }
+.tag:hover { border-color: var(--accent); transform: translateY(-1px); }
 
-.arch-layer h3 { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
-.arch-layer p { font-size: 0.85rem; color: var(--text-dim); }
+/* --- Steps --- */
+.steps { display: flex; flex-direction: column; gap: 1.5rem; max-width: 640px; }
+.step { display: flex; gap: 1.2rem; align-items: flex-start; }
 
-.arch-layer.base { background: rgba(234, 88, 12, 0.06); }
-.arch-layer.base h3 { color: var(--accent); }
-.arch-layer.lang { background: rgba(37, 99, 235, 0.06); }
-.arch-layer.lang h3 { color: var(--blue); }
-.arch-layer.fw { background: rgba(22, 163, 74, 0.06); }
-.arch-layer.fw h3 { color: var(--green); }
-
-@media (prefers-color-scheme: dark) {
-  .arch-layer.base { background: rgba(255, 107, 53, 0.08); }
-  .arch-layer.lang { background: rgba(96, 165, 250, 0.08); }
-  .arch-layer.fw { background: rgba(74, 222, 128, 0.08); }
-}
-
-/* --- Stack Tags --- */
-.stack-section { text-align: center; }
-.stack-group { margin-bottom: 2rem; }
-
-.stack-group-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-dim);
-  margin-bottom: 1rem;
-}
-
-.stack-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
-
-.stack-tag {
-  padding: 0.5rem 1.2rem;
-  border-radius: 100px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  box-shadow: var(--shadow-card);
-  transition: all 0.3s;
-  cursor: default;
-}
-.stack-tag:hover {
-  border-color: var(--accent);
-  background: var(--accent-glow);
-  transform: translateY(-2px);
-}
-
-/* --- Install --- */
-.install-steps { display: flex; flex-direction: column; gap: 1.5rem; max-width: 700px; }
-.install-step { display: flex; gap: 1.5rem; align-items: flex-start; }
-
-.step-num {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
+.step-n {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent); color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+  font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
 }
 
-.step-content h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.step-body h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+.step-body .hint { font-size: 0.9rem; color: var(--text-2); }
 
-.code-block {
-  background: var(--bg-code);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem 1.2rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--code-text);
-  overflow-x: auto;
-  line-height: 1.8;
-  position: relative;
+.code {
+  background: var(--bg-code); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.8rem 1rem;
+  font-family: var(--mono); font-size: 0.82rem;
+  color: #a6e3a1; overflow-x: auto; line-height: 1.7;
+  position: relative; margin-top: 0.4rem;
 }
 
-.code-block .comment { color: var(--text-dim); }
+.code .dim { color: #6c7086; }
 
-.code-block .copy-btn {
-  position: absolute;
-  top: 0.5rem; right: 0.5rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  cursor: pointer;
+.code .cp {
+  position: absolute; top: 0.4rem; right: 0.4rem;
+  background: #313244; border: 1px solid #45475a; color: #a6adc8;
+  padding: 0.2rem 0.5rem; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.65rem;
+  cursor: pointer; transition: all 0.15s;
+}
+.code .cp:hover { color: #cdd6f4; border-color: var(--accent); }
+
+/* --- Tools row --- */
+.tools { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem; }
+
+.tool {
+  padding: 1.2rem 0.8rem; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--bg-card);
+  text-align: center; box-shadow: var(--shadow);
   transition: all 0.2s;
 }
-.code-block .copy-btn:hover { color: var(--text); border-color: var(--accent); }
-
-/* --- Tools --- */
-.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-
-.tool-card {
-  padding: 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-card);
-  text-align: center;
-  box-shadow: var(--shadow-card);
-  transition: all 0.3s;
-}
-.tool-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.tool-card .tool-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
-.tool-card .tool-file { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); }
+.tool:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.tool-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.tool-file { font-family: var(--mono); font-size: 0.72rem; color: var(--text-3); }
 
 /* --- Footer --- */
-footer {
-  text-align: center;
-  padding: 4rem 2rem;
+.footer {
+  text-align: center; padding: 3rem 2rem;
   border-top: 1px solid var(--border);
-  color: var(--text-dim);
-  font-size: 0.9rem;
+  color: var(--text-3); font-size: 0.85rem;
 }
-footer a { color: var(--accent); }
+.footer a { color: var(--accent); }
 
 /* --- Animations --- */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.fade-in.visible { opacity: 1; transform: translateY(0); }
-
-/* --- i18n --- */
-[data-lang="zh"] { display: none; }
-html[lang="zh"] [data-lang="zh"] { display: revert; }
-html[lang="zh"] [data-lang="en"] { display: none; }
+.reveal.visible { opacity: 1; transform: none; }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  .problem-grid, .compare { grid-template-columns: 1fr; }
-  .tools-grid { grid-template-columns: 1fr 1fr; }
-  section { padding: 4rem 1.5rem; }
-  .install-step { flex-direction: column; gap: 0.8rem; }
+  .nav { padding: 0.8rem 1rem; }
+  .container { padding: 0 1.2rem; }
+  .cards, .compare { grid-template-columns: 1fr; }
+  .tools { grid-template-columns: 1fr 1fr; }
+  .step { flex-direction: column; gap: 0.6rem; }
+  .section, .section-alt { padding: 3.5rem 0; }
 }
 
 @media (max-width: 480px) {
-  .tools-grid { grid-template-columns: 1fr; }
+  .tools { grid-template-columns: 1fr; }
+  .hero { padding: 5rem 1.2rem 3rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- Language Switch -->
-<div class="lang-switch">
-  <button class="active" onclick="setLang('en')">EN</button>
-  <button onclick="setLang('zh')">中文</button>
-</div>
+<nav class="nav">
+  <a href="#" class="nav-brand">&#128218; Claude Rules</a>
+  <div class="lang-menu" id="langMenu"></div>
+</nav>
 
-<!-- Hero -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="badge">
-      <span class="badge-dot"></span>
-      Open Source &middot; MIT License
-    </div>
-    <h1>
-      <span data-lang="en">Stop AI from<br>copying <span class="highlight">bad code</span></span>
-      <span data-lang="zh">让 AI 停止<br>复制<span class="highlight">坏代码</span></span>
-    </h1>
-    <p class="hero-sub">
-      <span data-lang="en">Actionable coding standards that AI can actually follow. Auto-detect your tech stack, generate rules in seconds.</span>
-      <span data-lang="zh">AI 能真正执行的编码规范。自动检测技术栈，秒级生成规则文件。</span>
-    </p>
-    <div class="hero-actions">
+  <div class="hero-inner">
+    <h1 data-i18n="hero.title"></h1>
+    <p data-i18n="hero.sub"></p>
+    <div class="hero-btns">
       <a href="https://github.com/lifedever/claude-rules" class="btn btn-primary" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
       </a>
-      <a href="#install" class="btn btn-ghost">
-        <span data-lang="en">Get Started</span>
-        <span data-lang="zh">快速开始</span>
-      </a>
+      <a href="#install" class="btn btn-outline" data-i18n="hero.cta"></a>
     </div>
   </div>
 </section>
 
-<!-- Problem -->
-<section class="fade-in">
-  <div class="section-label">
-    <span data-lang="en">The Problem</span>
-    <span data-lang="zh">痛点</span>
+<div class="section">
+  <div class="container reveal">
+    <div class="section-head">
+      <div class="label" data-i18n="problem.label"></div>
+      <h2 data-i18n="problem.title"></h2>
+      <p data-i18n="problem.desc"></p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="icon">&#128163;</div><h3 data-i18n="problem.c1.t"></h3><p data-i18n="problem.c1.d"></p></div>
+      <div class="card"><div class="icon">&#128165;</div><h3 data-i18n="problem.c2.t"></h3><p data-i18n="problem.c2.d"></p></div>
+      <div class="card"><div class="icon">&#128296;</div><h3 data-i18n="problem.c3.t"></h3><p data-i18n="problem.c3.d"></p></div>
+      <div class="card"><div class="icon">&#9888;&#65039;</div><h3 data-i18n="problem.c4.t"></h3><p data-i18n="problem.c4.d"></p></div>
+    </div>
   </div>
-  <h2>
-    <span data-lang="en">AI mimics your worst habits</span>
-    <span data-lang="zh">AI 会模仿你最差的代码习惯</span>
-  </h2>
-  <p class="section-desc">
-    <span data-lang="en">When AI reads your legacy code, it thinks that's the standard. It copies every anti-pattern it finds.</span>
-    <span data-lang="zh">当 AI 读到旧代码时，它把那当成标准，照搬每一个反模式。</span>
-  </p>
+</div>
 
-  <div class="problem-grid">
-    <div class="problem-card">
-      <div class="icon">&#128163;</div>
-      <h3>
-        <span data-lang="en">God Classes keep growing</span>
-        <span data-lang="zh">God Class 越来越大</span>
-      </h3>
-      <p>
-        <span data-lang="en">800-line file? AI adds 50 more lines instead of refactoring into smaller modules.</span>
-        <span data-lang="zh">800 行的大文件？AI 继续往里堆 50 行，而不是拆分成小模块。</span>
-      </p>
+<div class="section-alt">
+  <div class="container reveal">
+    <div class="section-head">
+      <div class="label" data-i18n="diff.label"></div>
+      <h2 data-i18n="diff.title"></h2>
+      <p data-i18n="diff.desc"></p>
     </div>
-    <div class="problem-card">
-      <div class="icon">&#128165;</div>
-      <h3>
-        <span data-lang="en">any spreads like a virus</span>
-        <span data-lang="zh">any 像病毒一样扩散</span>
-      </h3>
-      <p>
-        <span data-lang="en">One any in your codebase, AI uses it everywhere. Type safety goes out the window.</span>
-        <span data-lang="zh">代码里有一个 any，AI 就到处用。类型安全形同虚设。</span>
-      </p>
-    </div>
-    <div class="problem-card">
-      <div class="icon">&#128296;</div>
-      <h3>
-        <span data-lang="en">Callback hell multiplies</span>
-        <span data-lang="zh">回调地狱层层加码</span>
-      </h3>
-      <p>
-        <span data-lang="en">5-level nesting? AI nests 6. It treats your worst code as the template.</span>
-        <span data-lang="zh">嵌套 5 层？AI 嵌 6 层。它把你最差的代码当模板。</span>
-      </p>
-    </div>
-    <div class="problem-card">
-      <div class="icon">&#9888;&#65039;</div>
-      <h3>
-        <span data-lang="en">Outdated patterns persist</span>
-        <span data-lang="zh">过时写法被延续</span>
-      </h3>
-      <p>
-        <span data-lang="en">Using ObservableObject in Swift 6? Old enum in TypeScript? AI follows suit.</span>
-        <span data-lang="zh">Swift 6 还在用 ObservableObject？TypeScript 还在用 enum？AI 照抄不误。</span>
-      </p>
+    <div class="compare">
+      <div class="cmp cmp-bad">
+        <div class="cmp-title" data-i18n="diff.bad"></div>
+        <ul>
+          <li data-i18n="diff.b1"></li>
+          <li data-i18n="diff.b2"></li>
+          <li data-i18n="diff.b3"></li>
+          <li data-i18n="diff.b4"></li>
+        </ul>
+      </div>
+      <div class="cmp cmp-good">
+        <div class="cmp-title">&#9989; claude-rules</div>
+        <ul>
+          <li data-i18n="diff.g1"></li>
+          <li data-i18n="diff.g2"></li>
+          <li data-i18n="diff.g3"></li>
+          <li data-i18n="diff.g4"></li>
+        </ul>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Compare -->
-<section class="fade-in">
-  <div class="section-label">
-    <span data-lang="en">The Difference</span>
-    <span data-lang="zh">区别</span>
-  </div>
-  <h2>
-    <span data-lang="en">Vague vs. actionable</span>
-    <span data-lang="zh">空话 vs. 可执行</span>
-  </h2>
-  <p class="section-desc">
-    <span data-lang="en">Most coding rules are too vague for AI to execute. Ours are concrete directives with code examples.</span>
-    <span data-lang="zh">大多数编码规则太模糊，AI 无法执行。我们的每条规则都是具体指令，附带代码示例。</span>
-  </p>
-
-  <div class="compare">
-    <div class="compare-panel bad">
-      <h3>
-        <span data-lang="en">&#10060; Other rule libraries</span>
-        <span data-lang="zh">&#10060; 其他规范库</span>
-      </h3>
-      <ul>
-        <li><span data-lang="en">Use proper error handling</span><span data-lang="zh">正确处理错误</span></li>
-        <li><span data-lang="en">Implement appropriate caching</span><span data-lang="zh">实现适当的缓存</span></li>
-        <li><span data-lang="en">Use proper navigation methods</span><span data-lang="zh">使用适当的导航方法</span></li>
-        <li><span data-lang="en">Keep components organized</span><span data-lang="zh">保持组件有序</span></li>
-        <li><span data-lang="en">Follow best practices</span><span data-lang="zh">遵循最佳实践</span></li>
-      </ul>
+<div class="section">
+  <div class="container reveal">
+    <div class="section-head">
+      <div class="label" data-i18n="arch.label"></div>
+      <h2 data-i18n="arch.title"></h2>
+      <p data-i18n="arch.desc"></p>
     </div>
-    <div class="compare-panel good">
-      <h3>&#9989; claude-rules</h3>
-      <ul>
-        <li><span data-lang="en">Functions &le;30 lines, files &le;300 lines</span><span data-lang="zh">函数 &le;30 行，文件 &le;300 行</span></li>
-        <li><span data-lang="en">ref for primitives, reactive for objects</span><span data-lang="zh">基本类型用 ref，对象用 reactive</span></li>
-        <li><span data-lang="en">No any &mdash; use unknown then narrow</span><span data-lang="zh">禁止 any，用 unknown 后收窄</span></li>
-        <li><span data-lang="en">No barrel exports (causes circular deps)</span><span data-lang="zh">禁止桶导出（导致循环依赖）</span></li>
-        <li><span data-lang="en">as const + union type, not enum</span><span data-lang="zh">as const + 联合类型，不用 enum</span></li>
-      </ul>
+    <div class="layers">
+      <div class="layer layer-fw"><h3>Framework</h3><p>Vue &middot; React &middot; SwiftUI &middot; Spring Boot &middot; Tauri</p></div>
+      <div class="layer layer-lang"><h3>Language</h3><p>TypeScript &middot; JavaScript &middot; Java &middot; Kotlin &middot; Swift &middot; Python &middot; Go &middot; Rust &middot; HTML &middot; CSS</p></div>
+      <div class="layer layer-base"><h3>Base</h3><p data-i18n="arch.base"></p></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Architecture -->
-<section class="fade-in">
-  <div class="section-label">
-    <span data-lang="en">Architecture</span>
-    <span data-lang="zh">架构</span>
-  </div>
-  <h2>
-    <span data-lang="en">Three layers, pick what you need</span>
-    <span data-lang="zh">三层架构，按需组合</span>
-  </h2>
-  <p class="section-desc">
-    <span data-lang="en">Combine base rules with language-specific and framework-specific standards. Only include what your project uses.</span>
-    <span data-lang="zh">基础规则 + 语言规则 + 框架规则，只选项目需要的。</span>
-  </p>
-
-  <div class="arch-layers">
-    <div class="arch-layer fw">
-      <h3>Framework</h3>
-      <p>Vue &middot; React &middot; SwiftUI &middot; Spring Boot &middot; Tauri</p>
+<div class="section-alt">
+  <div class="container reveal tags-wrap">
+    <div class="section-head" style="text-align:center;">
+      <div class="label" data-i18n="stack.label"></div>
+      <h2 data-i18n="stack.title"></h2>
+      <p style="margin-left:auto;margin-right:auto;" data-i18n="stack.desc"></p>
     </div>
-    <div class="arch-layer lang">
-      <h3>Language</h3>
-      <p>TypeScript &middot; JavaScript &middot; Java &middot; Kotlin &middot; Swift &middot; Python &middot; Go &middot; Rust &middot; HTML &middot; CSS</p>
+    <div class="tags-label">Languages</div>
+    <div class="tags">
+      <span class="tag">TypeScript</span><span class="tag">JavaScript</span><span class="tag">Java</span>
+      <span class="tag">Kotlin</span><span class="tag">Swift</span><span class="tag">Python</span>
+      <span class="tag">Go</span><span class="tag">Rust</span><span class="tag">HTML</span><span class="tag">CSS</span>
     </div>
-    <div class="arch-layer base">
-      <h3>Base</h3>
-      <p>
-        <span data-lang="en">Legacy code attitude &middot; Quality metrics &middot; Naming &middot; Architecture &middot; Git</span>
-        <span data-lang="zh">旧代码态度 &middot; 质量指标 &middot; 命名 &middot; 架构 &middot; Git</span>
-      </p>
+    <div class="tags-label">Frameworks</div>
+    <div class="tags">
+      <span class="tag">Vue 3</span><span class="tag">React</span><span class="tag">SwiftUI</span>
+      <span class="tag">Spring Boot</span><span class="tag">Tauri</span>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Supported Stacks -->
-<section class="stack-section fade-in">
-  <div class="section-label">
-    <span data-lang="en">Supported Stacks</span>
-    <span data-lang="zh">技术栈支持</span>
-  </div>
-  <h2>
-    <span data-lang="en">10 languages, 5 frameworks</span>
-    <span data-lang="zh">10 种语言，5 个框架</span>
-  </h2>
-  <p class="section-desc" style="margin-left:auto;margin-right:auto;">
-    <span data-lang="en">And growing. PRs welcome.</span>
-    <span data-lang="zh">持续增加中，欢迎 PR。</span>
-  </p>
-
-  <div class="stack-group">
-    <div class="stack-group-label">Languages</div>
-    <div class="stack-tags">
-      <span class="stack-tag">TypeScript</span>
-      <span class="stack-tag">JavaScript</span>
-      <span class="stack-tag">Java</span>
-      <span class="stack-tag">Kotlin</span>
-      <span class="stack-tag">Swift</span>
-      <span class="stack-tag">Python</span>
-      <span class="stack-tag">Go</span>
-      <span class="stack-tag">Rust</span>
-      <span class="stack-tag">HTML</span>
-      <span class="stack-tag">CSS</span>
+<div class="section" id="install">
+  <div class="container reveal">
+    <div class="section-head">
+      <div class="label" data-i18n="install.label"></div>
+      <h2 data-i18n="install.title"></h2>
     </div>
-  </div>
-  <div class="stack-group">
-    <div class="stack-group-label">Frameworks</div>
-    <div class="stack-tags">
-      <span class="stack-tag">Vue 3</span>
-      <span class="stack-tag">React</span>
-      <span class="stack-tag">SwiftUI</span>
-      <span class="stack-tag">Spring Boot</span>
-      <span class="stack-tag">Tauri</span>
-    </div>
-  </div>
-</section>
-
-<!-- Install -->
-<section class="fade-in" id="install">
-  <div class="section-label">
-    <span data-lang="en">Get Started</span>
-    <span data-lang="zh">快速开始</span>
-  </div>
-  <h2>
-    <span data-lang="en">Up and running in 60 seconds</span>
-    <span data-lang="zh">60 秒搞定</span>
-  </h2>
-
-  <div class="install-steps">
-    <div class="install-step">
-      <div class="step-num">1</div>
-      <div class="step-content">
-        <h3>
-          <span data-lang="en">Add marketplace &amp; install plugin</span>
-          <span data-lang="zh">添加 marketplace 并安装插件</span>
-        </h3>
-        <div class="code-block">
-          <span class="comment"># Add the marketplace</span><br>
-          claude plugin marketplace add lifedever/claude-rules<br><br>
-          <span class="comment"># Install the plugin</span><br>
-          claude plugin install init-claude-rules@claude-rules
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <h3 data-i18n="install.s1"></h3>
+          <div class="code">
+            <span class="dim"># Add marketplace</span><br>
+            claude plugin marketplace add lifedever/claude-rules<br><br>
+            <span class="dim"># Install plugin</span><br>
+            claude plugin install init-claude-rules@claude-rules
+            <button class="cp" onclick="copyCode(this)">Copy</button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="install-step">
-      <div class="step-num">2</div>
-      <div class="step-content">
-        <h3>
-          <span data-lang="en">Restart Claude Code</span>
-          <span data-lang="zh">重启 Claude Code</span>
-        </h3>
-        <p style="color:var(--text-dim);font-size:0.95rem;">
-          <span data-lang="en">The plugin needs a restart to register the skill.</span>
-          <span data-lang="zh">插件需要重启才能注册技能。</span>
-        </p>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <h3 data-i18n="install.s2"></h3>
+          <p class="hint" data-i18n="install.s2d"></p>
+        </div>
       </div>
-    </div>
-
-    <div class="install-step">
-      <div class="step-num">3</div>
-      <div class="step-content">
-        <h3>
-          <span data-lang="en">Run in any project</span>
-          <span data-lang="zh">在任意项目中运行</span>
-        </h3>
-        <div class="code-block">
-          /init-rules
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <h3 data-i18n="install.s3"></h3>
+          <div class="code">/init-rules<button class="cp" onclick="copyCode(this)">Copy</button></div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Other Tools -->
-<section class="fade-in">
-  <div class="section-label">
-    <span data-lang="en">Works Everywhere</span>
-    <span data-lang="zh">全平台支持</span>
-  </div>
-  <h2>
-    <span data-lang="en">Not just Claude Code</span>
-    <span data-lang="zh">不止 Claude Code</span>
-  </h2>
-  <p class="section-desc">
-    <span data-lang="en">Plain Markdown rules work with any AI coding tool.</span>
-    <span data-lang="zh">纯 Markdown 格式，适用于任何 AI 编码工具。</span>
-  </p>
-
-  <div class="tools-grid">
-    <div class="tool-card">
-      <div class="tool-name">Claude Code</div>
-      <div class="tool-file">CLAUDE.md</div>
+<div class="section-alt">
+  <div class="container reveal">
+    <div class="section-head">
+      <div class="label" data-i18n="tools.label"></div>
+      <h2 data-i18n="tools.title"></h2>
+      <p data-i18n="tools.desc"></p>
     </div>
-    <div class="tool-card">
-      <div class="tool-name">Cursor</div>
-      <div class="tool-file">.cursorrules</div>
-    </div>
-    <div class="tool-card">
-      <div class="tool-name">Windsurf</div>
-      <div class="tool-file">.windsurfrules</div>
-    </div>
-    <div class="tool-card">
-      <div class="tool-name">GitHub Copilot</div>
-      <div class="tool-file">.github/copilot-instructions.md</div>
-    </div>
-    <div class="tool-card">
-      <div class="tool-name">Codex</div>
-      <div class="tool-file">AGENTS.md</div>
+    <div class="tools">
+      <div class="tool"><div class="tool-name">Claude Code</div><div class="tool-file">CLAUDE.md</div></div>
+      <div class="tool"><div class="tool-name">Cursor</div><div class="tool-file">.cursorrules</div></div>
+      <div class="tool"><div class="tool-name">Windsurf</div><div class="tool-file">.windsurfrules</div></div>
+      <div class="tool"><div class="tool-name">Copilot</div><div class="tool-file">copilot-instructions.md</div></div>
+      <div class="tool"><div class="tool-name">Codex</div><div class="tool-file">AGENTS.md</div></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Footer -->
-<footer>
-  <p>
-    <a href="https://github.com/lifedever/claude-rules" target="_blank">GitHub</a>
-    &nbsp;&middot;&nbsp;
-    MIT License
-    &nbsp;&middot;&nbsp;
-    Made with Claude Code
-  </p>
+<footer class="footer">
+  <a href="https://github.com/lifedever/claude-rules" target="_blank">GitHub</a>
+  &nbsp;&middot;&nbsp; MIT License &nbsp;&middot;&nbsp; Made with Claude Code
 </footer>
 
 <script>
-// Scroll fade-in
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.15 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+const i18n = {
+  en: {
+    "hero.title": "Stop AI from copying <em>bad code</em>",
+    "hero.sub": "Actionable coding standards that AI can actually follow. Auto-detect your tech stack, generate rules in seconds.",
+    "hero.cta": "Get Started",
+    "problem.label": "The Problem",
+    "problem.title": "AI mimics your worst habits",
+    "problem.desc": "When AI reads legacy code, it treats anti-patterns as the standard.",
+    "problem.c1.t": "God Classes keep growing",
+    "problem.c1.d": "800-line file? AI adds 50 more instead of refactoring.",
+    "problem.c2.t": "any spreads like a virus",
+    "problem.c2.d": "One any in the codebase, AI uses it everywhere.",
+    "problem.c3.t": "Callback hell multiplies",
+    "problem.c3.d": "5 levels deep? AI nests 6. Your worst code becomes the template.",
+    "problem.c4.t": "Outdated patterns persist",
+    "problem.c4.d": "ObservableObject in Swift 6? enum in TypeScript? AI follows suit.",
+    "diff.label": "The Difference",
+    "diff.title": "Vague vs. actionable",
+    "diff.desc": "Most rules are too vague for AI. Ours are concrete directives with examples.",
+    "diff.bad": "&#10060; Other rule libraries",
+    "diff.b1": "Use proper error handling",
+    "diff.b2": "Implement appropriate caching",
+    "diff.b3": "Keep components organized",
+    "diff.b4": "Follow best practices",
+    "diff.g1": "Functions \u226430 lines, files \u2264300 lines",
+    "diff.g2": "ref for primitives, reactive for objects",
+    "diff.g3": "No any \u2014 use unknown then narrow",
+    "diff.g4": "as const + union type, not enum",
+    "arch.label": "Architecture",
+    "arch.title": "Three layers, pick what you need",
+    "arch.desc": "Combine base + language + framework. Only include what your project uses.",
+    "arch.base": "Legacy code attitude \u00b7 Quality metrics \u00b7 Naming \u00b7 Architecture \u00b7 Git",
+    "stack.label": "Supported",
+    "stack.title": "10 languages, 5 frameworks",
+    "stack.desc": "And growing. PRs welcome.",
+    "install.label": "Get Started",
+    "install.title": "Up and running in 60 seconds",
+    "install.s1": "Add marketplace & install plugin",
+    "install.s2": "Restart Claude Code",
+    "install.s2d": "The plugin needs a restart to register.",
+    "install.s3": "Run in any project",
+    "tools.label": "Compatibility",
+    "tools.title": "Works with any AI coding tool",
+    "tools.desc": "Plain Markdown. Place the output where your tool expects."
+  },
+  zh: {
+    "hero.title": "\u8ba9 AI \u505c\u6b62\u590d\u5236<em>\u574f\u4ee3\u7801</em>",
+    "hero.sub": "AI \u80fd\u771f\u6b63\u6267\u884c\u7684\u7f16\u7801\u89c4\u8303\u3002\u81ea\u52a8\u68c0\u6d4b\u6280\u672f\u6808\uff0c\u79d2\u7ea7\u751f\u6210\u89c4\u5219\u6587\u4ef6\u3002",
+    "hero.cta": "\u5feb\u901f\u5f00\u59cb",
+    "problem.label": "\u75db\u70b9",
+    "problem.title": "AI \u4f1a\u6a21\u4eff\u4f60\u6700\u5dee\u7684\u4ee3\u7801\u4e60\u60ef",
+    "problem.desc": "\u5f53 AI \u8bfb\u5230\u65e7\u4ee3\u7801\u65f6\uff0c\u5b83\u628a\u53cd\u6a21\u5f0f\u5f53\u6210\u6807\u51c6\u3002",
+    "problem.c1.t": "God Class \u8d8a\u6765\u8d8a\u5927",
+    "problem.c1.d": "800 \u884c\u7684\u6587\u4ef6\uff1fAI \u7ee7\u7eed\u5f80\u91cc\u5806\uff0c\u800c\u4e0d\u662f\u62c6\u5206\u3002",
+    "problem.c2.t": "any \u50cf\u75c5\u6bd2\u4e00\u6837\u6269\u6563",
+    "problem.c2.d": "\u4ee3\u7801\u91cc\u6709\u4e00\u4e2a any\uff0cAI \u5c31\u5230\u5904\u7528\u3002",
+    "problem.c3.t": "\u56de\u8c03\u5730\u72f1\u5c42\u5c42\u52a0\u7801",
+    "problem.c3.d": "\u5d4c\u5957 5 \u5c42\uff1fAI \u5d4c 6 \u5c42\u3002\u4f60\u6700\u5dee\u7684\u4ee3\u7801\u6210\u4e86\u6a21\u677f\u3002",
+    "problem.c4.t": "\u8fc7\u65f6\u5199\u6cd5\u88ab\u5ef6\u7eed",
+    "problem.c4.d": "Swift 6 \u8fd8\u5728\u7528 ObservableObject\uff1fTypeScript \u8fd8\u5728\u7528 enum\uff1fAI \u7167\u6284\u3002",
+    "diff.label": "\u533a\u522b",
+    "diff.title": "\u7a7a\u8bdd vs. \u53ef\u6267\u884c",
+    "diff.desc": "\u5927\u591a\u6570\u89c4\u8303\u592a\u6a21\u7cca\uff0cAI \u65e0\u6cd5\u6267\u884c\u3002\u6211\u4eec\u7684\u6bcf\u6761\u89c4\u5219\u90fd\u662f\u5177\u4f53\u6307\u4ee4\u3002",
+    "diff.bad": "&#10060; \u5176\u4ed6\u89c4\u8303\u5e93",
+    "diff.b1": "\u6b63\u786e\u5904\u7406\u9519\u8bef",
+    "diff.b2": "\u5b9e\u73b0\u9002\u5f53\u7684\u7f13\u5b58",
+    "diff.b3": "\u4fdd\u6301\u7ec4\u4ef6\u6709\u5e8f",
+    "diff.b4": "\u9075\u5faa\u6700\u4f73\u5b9e\u8df5",
+    "diff.g1": "\u51fd\u6570 \u226430 \u884c\uff0c\u6587\u4ef6 \u2264300 \u884c",
+    "diff.g2": "\u57fa\u672c\u7c7b\u578b\u7528 ref\uff0c\u5bf9\u8c61\u7528 reactive",
+    "diff.g3": "\u7981\u6b62 any\uff0c\u7528 unknown \u540e\u6536\u7a84",
+    "diff.g4": "as const + \u8054\u5408\u7c7b\u578b\uff0c\u4e0d\u7528 enum",
+    "arch.label": "\u67b6\u6784",
+    "arch.title": "\u4e09\u5c42\u67b6\u6784\uff0c\u6309\u9700\u7ec4\u5408",
+    "arch.desc": "\u57fa\u7840\u89c4\u5219 + \u8bed\u8a00\u89c4\u5219 + \u6846\u67b6\u89c4\u5219\uff0c\u53ea\u9009\u9879\u76ee\u9700\u8981\u7684\u3002",
+    "arch.base": "\u65e7\u4ee3\u7801\u6001\u5ea6 \u00b7 \u8d28\u91cf\u6307\u6807 \u00b7 \u547d\u540d \u00b7 \u67b6\u6784 \u00b7 Git",
+    "stack.label": "\u6280\u672f\u6808",
+    "stack.title": "10 \u79cd\u8bed\u8a00\uff0c5 \u4e2a\u6846\u67b6",
+    "stack.desc": "\u6301\u7eed\u589e\u52a0\u4e2d\uff0c\u6b22\u8fce PR\u3002",
+    "install.label": "\u5feb\u901f\u5f00\u59cb",
+    "install.title": "60 \u79d2\u641e\u5b9a",
+    "install.s1": "\u6dfb\u52a0 marketplace \u5e76\u5b89\u88c5\u63d2\u4ef6",
+    "install.s2": "\u91cd\u542f Claude Code",
+    "install.s2d": "\u63d2\u4ef6\u9700\u8981\u91cd\u542f\u624d\u80fd\u6ce8\u518c\u3002",
+    "install.s3": "\u5728\u4efb\u610f\u9879\u76ee\u4e2d\u8fd0\u884c",
+    "tools.label": "\u517c\u5bb9\u6027",
+    "tools.title": "\u9002\u7528\u4e8e\u4efb\u4f55 AI \u7f16\u7801\u5de5\u5177",
+    "tools.desc": "\u7eaf Markdown \u683c\u5f0f\uff0c\u653e\u5230\u5de5\u5177\u6307\u5b9a\u7684\u4f4d\u7f6e\u5373\u53ef\u3002"
+  },
+  ja: {
+    "hero.title": "AI\u306b<em>\u60aa\u3044\u30b3\u30fc\u30c9</em>\u3092\u30b3\u30d4\u30fc\u3055\u305b\u306a\u3044",
+    "hero.sub": "AI\u304c\u5b9f\u969b\u306b\u5f93\u3048\u308b\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0\u898f\u7d04\u3002\u6280\u8853\u30b9\u30bf\u30c3\u30af\u3092\u81ea\u52d5\u691c\u51fa\u3057\u3001\u6570\u79d2\u3067\u30eb\u30fc\u30eb\u3092\u751f\u6210\u3002",
+    "hero.cta": "\u59cb\u3081\u308b",
+    "problem.label": "\u8ab2\u984c",
+    "problem.title": "AI\u306f\u6700\u60aa\u306e\u7fd2\u6163\u3092\u771f\u4f3c\u308b",
+    "problem.desc": "AI\u306f\u30ec\u30ac\u30b7\u30fc\u30b3\u30fc\u30c9\u3092\u8aad\u3080\u3068\u3001\u30a2\u30f3\u30c1\u30d1\u30bf\u30fc\u30f3\u3092\u6a19\u6e96\u3068\u898b\u306a\u3057\u307e\u3059\u3002",
+    "problem.c1.t": "God Class\u304c\u80a5\u5927\u5316",
+    "problem.c1.d": "800\u884c\u306e\u30d5\u30a1\u30a4\u30eb\uff1fAI\u306f\u30ea\u30d5\u30a1\u30af\u30bf\u305b\u305a\u306b50\u884c\u8ffd\u52a0\u3002",
+    "problem.c2.t": "any\u304c\u30a6\u30a4\u30eb\u30b9\u306e\u3088\u3046\u306b\u62e1\u6563",
+    "problem.c2.d": "\u30b3\u30fc\u30c9\u306b1\u3064any\u304c\u3042\u308b\u3068\u3001AI\u306f\u81f3\u308b\u6240\u3067\u4f7f\u7528\u3002",
+    "problem.c3.t": "\u30b3\u30fc\u30eb\u30d0\u30c3\u30af\u5730\u7344\u304c\u589e\u6b96",
+    "problem.c3.d": "5\u6bb5\u30cd\u30b9\u30c8\uff1fAI\u306f6\u6bb5\u306b\u3002\u6700\u60aa\u306e\u30b3\u30fc\u30c9\u304c\u30c6\u30f3\u30d7\u30ec\u30fc\u30c8\u306b\u3002",
+    "problem.c4.t": "\u53e4\u3044\u30d1\u30bf\u30fc\u30f3\u304c\u6b8b\u5b58",
+    "problem.c4.d": "Swift 6\u3067ObservableObject\uff1fTypeScript\u3067enum\uff1fAI\u306f\u305d\u306e\u307e\u307e\u8e0f\u898f\u3002",
+    "diff.label": "\u9055\u3044",
+    "diff.title": "\u66d6\u6627 vs. \u5b9f\u884c\u53ef\u80fd",
+    "diff.desc": "\u307b\u3068\u3093\u3069\u306e\u30eb\u30fc\u30eb\u306f\u66d6\u6627\u3059\u304e\u3066AI\u304c\u5b9f\u884c\u3067\u304d\u307e\u305b\u3093\u3002",
+    "diff.bad": "&#10060; \u4ed6\u306e\u30eb\u30fc\u30eb\u30e9\u30a4\u30d6\u30e9\u30ea",
+    "diff.b1": "\u9069\u5207\u306a\u30a8\u30e9\u30fc\u30cf\u30f3\u30c9\u30ea\u30f3\u30b0\u3092\u4f7f\u7528",
+    "diff.b2": "\u9069\u5207\u306a\u30ad\u30e3\u30c3\u30b7\u30e5\u3092\u5b9f\u88c5",
+    "diff.b3": "\u30b3\u30f3\u30dd\u30fc\u30cd\u30f3\u30c8\u3092\u6574\u7406",
+    "diff.b4": "\u30d9\u30b9\u30c8\u30d7\u30e9\u30af\u30c6\u30a3\u30b9\u306b\u5f93\u3046",
+    "diff.g1": "\u95a2\u6570 \u226430\u884c\u3001\u30d5\u30a1\u30a4\u30eb \u2264300\u884c",
+    "diff.g2": "\u30d7\u30ea\u30df\u30c6\u30a3\u30d6\u306bref\u3001\u30aa\u30d6\u30b8\u30a7\u30af\u30c8\u306breactive",
+    "diff.g3": "any\u7981\u6b62 \u2014 unknown\u3067\u7d5e\u308a\u8fbc\u307f",
+    "diff.g4": "as const + \u30e6\u30cb\u30aa\u30f3\u578b\u3001enum\u4e0d\u4f7f\u7528",
+    "arch.label": "\u30a2\u30fc\u30ad\u30c6\u30af\u30c1\u30e3",
+    "arch.title": "3\u5c64\u69cb\u9020\u3001\u5fc5\u8981\u306a\u3082\u306e\u3060\u3051\u9078\u629e",
+    "arch.desc": "\u30d9\u30fc\u30b9 + \u8a00\u8a9e + \u30d5\u30ec\u30fc\u30e0\u30ef\u30fc\u30af\u3002\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306b\u5fc5\u8981\u306a\u3082\u306e\u3060\u3051\u3002",
+    "arch.base": "\u30ec\u30ac\u30b7\u30fc\u30b3\u30fc\u30c9\u3078\u306e\u59ff\u52e2 \u00b7 \u54c1\u8cea\u6307\u6a19 \u00b7 \u547d\u540d \u00b7 \u30a2\u30fc\u30ad\u30c6\u30af\u30c1\u30e3 \u00b7 Git",
+    "stack.label": "\u5bfe\u5fdc",
+    "stack.title": "10\u8a00\u8a9e\u30015\u30d5\u30ec\u30fc\u30e0\u30ef\u30fc\u30af",
+    "stack.desc": "\u7d99\u7d9a\u7684\u306b\u8ffd\u52a0\u4e2d\u3002PR\u6b53\u8fce\u3002",
+    "install.label": "\u59cb\u3081\u308b",
+    "install.title": "60\u79d2\u3067\u30bb\u30c3\u30c8\u30a2\u30c3\u30d7",
+    "install.s1": "Marketplace\u3092\u8ffd\u52a0\u3057\u30d7\u30e9\u30b0\u30a4\u30f3\u3092\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb",
+    "install.s2": "Claude Code\u3092\u518d\u8d77\u52d5",
+    "install.s2d": "\u30d7\u30e9\u30b0\u30a4\u30f3\u306e\u767b\u9332\u306b\u306f\u518d\u8d77\u52d5\u304c\u5fc5\u8981\u3067\u3059\u3002",
+    "install.s3": "\u4efb\u610f\u306e\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u3067\u5b9f\u884c",
+    "tools.label": "\u4e92\u63db\u6027",
+    "tools.title": "\u3042\u3089\u3086\u308bAI\u30b3\u30fc\u30c7\u30a3\u30f3\u30b0\u30c4\u30fc\u30eb\u306b\u5bfe\u5fdc",
+    "tools.desc": "\u7d14\u7c8bMarkdown\u3002\u30c4\u30fc\u30eb\u6307\u5b9a\u306e\u5834\u6240\u306b\u914d\u7f6e\u3059\u308b\u3060\u3051\u3002"
+  },
+  ko: {
+    "hero.title": "AI\uac00 <em>\ub098\uc05c \ucf54\ub4dc</em>\ub97c \ubcf5\uc0ac\ud558\uc9c0 \ubabb\ud558\uac8c",
+    "hero.sub": "AI\uac00 \uc2e4\uc81c\ub85c \ub530\ub97c \uc218 \uc788\ub294 \ucf54\ub529 \ud45c\uc900. \uae30\uc220 \uc2a4\ud0dd \uc790\ub3d9 \uac10\uc9c0, \ucd08 \ub9cc\uc5d0 \uaddc\uce59 \uc0dd\uc131.",
+    "hero.cta": "\uc2dc\uc791\ud558\uae30",
+    "problem.label": "\ubb38\uc81c\uc810",
+    "problem.title": "AI\ub294 \ucd5c\uc545\uc758 \uc2b5\uad00\uc744 \ubaa8\ubc29\ud569\ub2c8\ub2e4",
+    "problem.desc": "AI\uac00 \ub808\uac70\uc2dc \ucf54\ub4dc\ub97c \uc77d\uc73c\uba74 \uc548\ud2f0\ud328\ud134\uc744 \ud45c\uc900\uc73c\ub85c \ucde8\uae09\ud569\ub2c8\ub2e4.",
+    "problem.c1.t": "God Class\uac00 \uacc4\uc18d \ucee4\uc9d0",
+    "problem.c1.d": "800\uc904 \ud30c\uc77c? AI\ub294 \ub9ac\ud329\ud1a0\ub9c1 \ub300\uc2e0 50\uc904\uc744 \ub354 \ucd94\uac00.",
+    "problem.c2.t": "any\uac00 \ubc14\uc774\ub7ec\uc2a4\ucc98\ub7fc \ud655\uc0b0",
+    "problem.c2.d": "\ucf54\ub4dc\uc5d0 any\uac00 \ud558\ub098\ub9cc \uc788\uc5b4\ub3c4 AI\ub294 \ubaa8\ub4e0 \uacf3\uc5d0\uc11c \uc0ac\uc6a9.",
+    "problem.c3.t": "\ucf5c\ubc31 \uc9c0\uc625\uc774 \ubc30\uac00",
+    "problem.c3.d": "5\ub2e8\uacc4 \uc911\ucca9? AI\ub294 6\ub2e8\uacc4\ub85c. \ucd5c\uc545\uc758 \ucf54\ub4dc\uac00 \ud15c\ud50c\ub9bf\uc774 \ub429\ub2c8\ub2e4.",
+    "problem.c4.t": "\uc624\ub798\ub41c \ud328\ud134\uc774 \uc9c0\uc18d",
+    "problem.c4.d": "Swift 6\uc5d0\uc11c ObservableObject? TypeScript\uc5d0\uc11c enum? AI\ub3c4 \ub530\ub77c\ud569\ub2c8\ub2e4.",
+    "diff.label": "\ucc28\uc774\uc810",
+    "diff.title": "\ubaa8\ud638\ud568 vs. \uc2e4\ud589 \uac00\ub2a5",
+    "diff.desc": "\ub300\ubd80\ubd84\uc758 \uaddc\uce59\uc740 \ub108\ubb34 \ubaa8\ud638\ud574\uc11c AI\uac00 \uc2e4\ud589\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+    "diff.bad": "&#10060; \ub2e4\ub978 \uaddc\uce59 \ub77c\uc774\ube0c\ub7ec\ub9ac",
+    "diff.b1": "\uc801\uc808\ud55c \uc624\ub958 \ucc98\ub9ac \uc0ac\uc6a9",
+    "diff.b2": "\uc801\uc808\ud55c \uce90\uc2dc \uad6c\ud604",
+    "diff.b3": "\ucef4\ud3ec\ub10c\ud2b8 \uc815\ub9ac",
+    "diff.b4": "\ubaa8\ubc94 \uc0ac\ub840 \uc900\uc218",
+    "diff.g1": "\ud568\uc218 \u226430\uc904, \ud30c\uc77c \u2264300\uc904",
+    "diff.g2": "\uae30\ubcf8 \ud0c0\uc785\uc5d0 ref, \uac1d\uccb4\uc5d0 reactive",
+    "diff.g3": "any \uae08\uc9c0 \u2014 unknown\uc73c\ub85c \uc88b\ud600\uc11c \uc0ac\uc6a9",
+    "diff.g4": "as const + \uc720\ub2c8\uc5b8 \ud0c0\uc785, enum \ubbf8\uc0ac\uc6a9",
+    "arch.label": "\uc544\ud0a4\ud14d\ucc98",
+    "arch.title": "3\uacc4\uce35 \uad6c\uc870, \ud544\uc694\ud55c \uac83\ub9cc \uc120\ud0dd",
+    "arch.desc": "\ubca0\uc774\uc2a4 + \uc5b8\uc5b4 + \ud504\ub808\uc784\uc6cc\ud06c. \ud504\ub85c\uc81d\ud2b8\uc5d0 \ud544\uc694\ud55c \uac83\ub9cc.",
+    "arch.base": "\ub808\uac70\uc2dc \ucf54\ub4dc \ud0dc\ub3c4 \u00b7 \ud488\uc9c8 \uc9c0\ud45c \u00b7 \ub124\uc774\ubc0d \u00b7 \uc544\ud0a4\ud14d\ucc98 \u00b7 Git",
+    "stack.label": "\uc9c0\uc6d0",
+    "stack.title": "10\uac1c \uc5b8\uc5b4, 5\uac1c \ud504\ub808\uc784\uc6cc\ud06c",
+    "stack.desc": "\uacc4\uc18d \ucd94\uac00 \uc911. PR \ud658\uc601.",
+    "install.label": "\uc2dc\uc791\ud558\uae30",
+    "install.title": "60\ucd08 \uc548\uc5d0 \uc14b\uc5c5",
+    "install.s1": "Marketplace \ucd94\uac00 \ubc0f \ud50c\ub7ec\uadf8\uc778 \uc124\uce58",
+    "install.s2": "Claude Code \uc7ac\uc2dc\uc791",
+    "install.s2d": "\ud50c\ub7ec\uadf8\uc778 \ub4f1\ub85d\uc5d0\ub294 \uc7ac\uc2dc\uc791\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+    "install.s3": "\uc784\uc758\uc758 \ud504\ub85c\uc81d\ud2b8\uc5d0\uc11c \uc2e4\ud589",
+    "tools.label": "\ud638\ud658\uc131",
+    "tools.title": "\ubaa8\ub4e0 AI \ucf54\ub529 \ub3c4\uad6c\uc640 \ud638\ud658",
+    "tools.desc": "\uc21c\uc218 Markdown. \ub3c4\uad6c\uac00 \uc9c0\uc815\ud55c \uc704\uce58\uc5d0 \ubc30\uce58\ud558\uba74 \ub429\ub2c8\ub2e4."
+  },
+  es: {
+    "hero.title": "Evita que la IA copie <em>c\u00f3digo malo</em>",
+    "hero.sub": "Est\u00e1ndares de c\u00f3digo que la IA puede seguir realmente. Detecta tu stack, genera reglas en segundos.",
+    "hero.cta": "Comenzar",
+    "problem.label": "El Problema",
+    "problem.title": "La IA imita tus peores h\u00e1bitos",
+    "problem.desc": "Cuando la IA lee c\u00f3digo heredado, trata los antipatrones como est\u00e1ndar.",
+    "problem.c1.t": "Las God Classes siguen creciendo",
+    "problem.c1.d": "\u00bfArchivo de 800 l\u00edneas? La IA agrega 50 m\u00e1s en vez de refactorizar.",
+    "problem.c2.t": "any se propaga como virus",
+    "problem.c2.d": "Un any en el c\u00f3digo y la IA lo usa en todas partes.",
+    "problem.c3.t": "El callback hell se multiplica",
+    "problem.c3.d": "\u00bf5 niveles? La IA anida 6. Tu peor c\u00f3digo se vuelve la plantilla.",
+    "problem.c4.t": "Patrones obsoletos persisten",
+    "problem.c4.d": "\u00bfObservableObject en Swift 6? \u00bfenum en TypeScript? La IA los sigue.",
+    "diff.label": "La Diferencia",
+    "diff.title": "Vago vs. ejecutable",
+    "diff.desc": "La mayor\u00eda de reglas son demasiado vagas para la IA. Las nuestras son directivas concretas.",
+    "diff.bad": "&#10060; Otras bibliotecas de reglas",
+    "diff.b1": "Usar manejo de errores adecuado",
+    "diff.b2": "Implementar cach\u00e9 apropiado",
+    "diff.b3": "Mantener componentes organizados",
+    "diff.b4": "Seguir mejores pr\u00e1cticas",
+    "diff.g1": "Funciones \u226430 l\u00edneas, archivos \u2264300 l\u00edneas",
+    "diff.g2": "ref para primitivos, reactive para objetos",
+    "diff.g3": "Sin any \u2014 usar unknown y luego estrechar",
+    "diff.g4": "as const + tipo uni\u00f3n, no enum",
+    "arch.label": "Arquitectura",
+    "arch.title": "Tres capas, elige lo que necesitas",
+    "arch.desc": "Combina base + lenguaje + framework. Solo incluye lo que tu proyecto usa.",
+    "arch.base": "Actitud ante c\u00f3digo heredado \u00b7 M\u00e9tricas \u00b7 Nombrado \u00b7 Arquitectura \u00b7 Git",
+    "stack.label": "Soporte",
+    "stack.title": "10 lenguajes, 5 frameworks",
+    "stack.desc": "En crecimiento. PRs bienvenidos.",
+    "install.label": "Comenzar",
+    "install.title": "Listo en 60 segundos",
+    "install.s1": "Agregar marketplace e instalar plugin",
+    "install.s2": "Reiniciar Claude Code",
+    "install.s2d": "El plugin necesita un reinicio para registrarse.",
+    "install.s3": "Ejecutar en cualquier proyecto",
+    "tools.label": "Compatibilidad",
+    "tools.title": "Funciona con cualquier herramienta AI",
+    "tools.desc": "Markdown puro. Col\u00f3calo donde tu herramienta lo espera."
+  }
+};
 
-// Copy button
+const LANGS = [
+  { code: 'en', label: 'EN' },
+  { code: 'zh', label: '\u4e2d\u6587' },
+  { code: 'ja', label: '\u65e5\u672c\u8a9e' },
+  { code: 'ko', label: '\ud55c\uad6d\uc5b4' },
+  { code: 'es', label: 'ES' }
+];
+
+function setLang(lang) {
+  document.documentElement.lang = lang;
+  const t = i18n[lang] || i18n.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.innerHTML = t[key];
+  });
+  document.querySelectorAll('.lang-menu button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  localStorage.setItem('cr-lang', lang);
+}
+
+// Build lang menu
+const menu = document.getElementById('langMenu');
+LANGS.forEach(l => {
+  const b = document.createElement('button');
+  b.textContent = l.label;
+  b.dataset.lang = l.code;
+  b.onclick = () => setLang(l.code);
+  menu.appendChild(b);
+});
+
+// Auto-detect
+(function() {
+  const saved = localStorage.getItem('cr-lang');
+  if (saved && i18n[saved]) { setLang(saved); return; }
+  const bl = (navigator.language || '').toLowerCase();
+  if (bl.startsWith('zh')) setLang('zh');
+  else if (bl.startsWith('ja')) setLang('ja');
+  else if (bl.startsWith('ko')) setLang('ko');
+  else if (bl.startsWith('es')) setLang('es');
+  else setLang('en');
+})();
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Copy
 function copyCode(btn) {
-  const block = btn.parentElement;
-  const text = block.innerText.replace('Copy', '').replace('Copied!', '').trim();
-  navigator.clipboard.writeText(text).then(() => {
+  const t = btn.parentElement.innerText.replace(/Copy|Copied!/g, '').trim();
+  navigator.clipboard.writeText(t).then(() => {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy', 1500);
   });
 }
-
-// i18n
-function setLang(lang) {
-  document.documentElement.lang = lang;
-  document.querySelectorAll('.lang-switch button').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.lang-switch button[onclick="setLang('${lang}')"]`).classList.add('active');
-  localStorage.setItem('claude-rules-lang', lang);
-}
-
-// Auto-detect language
-(function() {
-  const saved = localStorage.getItem('claude-rules-lang');
-  if (saved) { setLang(saved); return; }
-  const browserLang = navigator.language || navigator.userLanguage || '';
-  if (browserLang.startsWith('zh')) setLang('zh');
-})();
 </script>
-
 </body>
 </html>
