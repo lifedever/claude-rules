@@ -68,33 +68,70 @@ a:hover { text-decoration: underline; }
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0.8rem 2rem;
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  backdrop-filter: blur(12px);
+  padding: 0.7rem 2rem;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border);
 }
 
 .nav-brand {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text);
+  font-weight: 700; font-size: 0.95rem; color: var(--text);
   display: flex; align-items: center; gap: 0.5rem;
 }
-
 .nav-brand:hover { text-decoration: none; }
 
-.lang-menu {
-  display: flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+.nav-right {
+  display: flex; align-items: center; gap: 0.3rem;
 }
 
-.lang-menu button {
-  padding: 0.3rem 0.6rem; border: none; background: transparent;
-  font-family: var(--mono); font-size: 0.7rem; color: var(--text-3);
-  cursor: pointer; transition: all 0.15s;
+.nav-link {
+  padding: 0.35rem 0.7rem; border-radius: 6px;
+  font-size: 0.85rem; color: var(--text-2);
+  transition: all 0.15s;
+}
+.nav-link:hover { color: var(--text); background: var(--bg-alt); text-decoration: none; }
+
+.nav-link svg { vertical-align: -2px; }
+
+.nav-divider { width: 1px; height: 16px; background: var(--border); margin: 0 0.3rem; }
+
+/* Lang dropdown */
+.lang-drop { position: relative; }
+
+.lang-btn {
+  display: flex; align-items: center; gap: 0.3rem;
+  padding: 0.35rem 0.7rem; border-radius: 6px;
+  font-family: var(--mono); font-size: 0.78rem;
+  color: var(--text-2); background: transparent;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: all 0.15s;
+}
+.lang-btn:hover { border-color: var(--accent); color: var(--text); }
+
+.lang-btn::after {
+  content: ''; width: 0; height: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
 }
 
-.lang-menu button.active { background: var(--accent); color: #fff; }
-.lang-menu button:not(.active):hover { background: var(--bg-alt); color: var(--text-2); }
+.lang-list {
+  display: none; position: absolute; top: calc(100% + 6px); right: 0;
+  min-width: 120px; padding: 4px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; box-shadow: var(--shadow-lg);
+  list-style: none;
+}
+
+.lang-drop.open .lang-list { display: block; }
+
+.lang-list li {
+  padding: 0.4rem 0.8rem; border-radius: 5px;
+  font-size: 0.82rem; color: var(--text-2);
+  cursor: pointer; transition: all 0.1s;
+}
+.lang-list li:hover { background: var(--bg-alt); color: var(--text); }
+.lang-list li.active { color: var(--accent); font-weight: 600; }
 
 /* --- Container --- */
 .container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
@@ -294,7 +331,9 @@ a:hover { text-decoration: underline; }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  .nav { padding: 0.8rem 1rem; }
+  .nav { padding: 0.7rem 1rem; }
+  .nav-link { display: none; }
+  .nav-divider { display: none; }
   .container { padding: 0 1.2rem; }
   .cards, .compare { grid-template-columns: 1fr; }
   .tools { grid-template-columns: 1fr 1fr; }
@@ -312,7 +351,18 @@ a:hover { text-decoration: underline; }
 
 <nav class="nav">
   <a href="#" class="nav-brand">&#128218; Claude Rules</a>
-  <div class="lang-menu" id="langMenu"></div>
+  <div class="nav-right">
+    <a href="#install" class="nav-link" data-i18n="install.label"></a>
+    <a href="https://github.com/lifedever/claude-rules" class="nav-link" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <div class="nav-divider"></div>
+    <div class="lang-drop" id="langDrop">
+      <button class="lang-btn" id="langBtn" onclick="document.getElementById('langDrop').classList.toggle('open')">EN</button>
+      <ul class="lang-list" id="langList"></ul>
+    </div>
+  </div>
 </nav>
 
 <section class="hero">
@@ -710,20 +760,29 @@ function setLang(lang) {
     const key = el.getAttribute('data-i18n');
     if (t[key]) el.innerHTML = t[key];
   });
-  document.querySelectorAll('.lang-menu button').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
+  const current = LANGS.find(l => l.code === lang);
+  document.getElementById('langBtn').textContent = current ? current.label : 'EN';
+  document.querySelectorAll('.lang-list li').forEach(li => {
+    li.classList.toggle('active', li.dataset.lang === lang);
   });
+  document.getElementById('langDrop').classList.remove('open');
   localStorage.setItem('cr-lang', lang);
 }
 
-// Build lang menu
-const menu = document.getElementById('langMenu');
+// Build lang dropdown
+const list = document.getElementById('langList');
 LANGS.forEach(l => {
-  const b = document.createElement('button');
-  b.textContent = l.label;
-  b.dataset.lang = l.code;
-  b.onclick = () => setLang(l.code);
-  menu.appendChild(b);
+  const li = document.createElement('li');
+  li.textContent = l.label;
+  li.dataset.lang = l.code;
+  li.onclick = () => setLang(l.code);
+  list.appendChild(li);
+});
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  const drop = document.getElementById('langDrop');
+  if (!drop.contains(e.target)) drop.classList.remove('open');
 });
 
 // Auto-detect
