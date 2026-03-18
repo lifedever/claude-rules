@@ -1,7 +1,5 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-rules",
-  "id": "claude-rules",
   "owner": {
     "name": "lifedever"
   },
