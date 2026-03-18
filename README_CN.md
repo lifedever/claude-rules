@@ -68,13 +68,13 @@ claude plugin marketplace add lifedever/claude-rules
 **第 2 步：安装插件**
 
 ```bash
-claude plugin install claude-rules-init@claude-rules
+claude plugin install init-claude-rules@claude-rules
 ```
 
 **第 3 步：重启 Claude Code**，然后在任意项目中运行：
 
 ```
-/claude-rules-init:init
+/init-claude-rules:init
 ```
 
 插件会：

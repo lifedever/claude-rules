@@ -71,13 +71,13 @@ claude plugin marketplace add lifedever/claude-rules
 **Step 2: Install the plugin**
 
 ```bash
-claude plugin install claude-rules-init@claude-rules
+claude plugin install init-claude-rules@claude-rules
 ```
 
 **Step 3: Restart Claude Code**, then open any project and run:
 
 ```
-/claude-rules-init:init
+/init-claude-rules:init
 ```
 
 The plugin will:
