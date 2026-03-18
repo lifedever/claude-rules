@@ -1,0 +1,9 @@
+{
+  "name": "claude-rules-init",
+  "description": "Initialize or update CLAUDE.md coding standards for any project by auto-detecting tech stack and assembling rules from the claude-rules template library. Use when user says 'init rules', 'generate CLAUDE.md', or wants to set up coding standards.",
+  "version": "1.0.0",
+  "author": {
+    "name": "lifedever"
+  },
+  "license": "MIT"
+}

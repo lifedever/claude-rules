@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-rules",
+  "id": "claude-rules",
+  "owner": {
+    "name": "lifedever"
+  },
+  "metadata": {
+    "description": "Coding standards template library for AI coding assistants. Auto-detect tech stack and generate project-specific rules.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-rules-init",
+      "source": "./",
+      "description": "Initialize or update CLAUDE.md coding standards for any project by auto-detecting tech stack and assembling rules from the claude-rules template library. Use when user says 'init rules', 'generate CLAUDE.md', or wants to set up coding standards.",
+      "version": "1.0.0",
+      "author": {
+        "name": "lifedever"
+      },
+      "category": "development",
+      "strict": false
+    }
+  ]
+}
