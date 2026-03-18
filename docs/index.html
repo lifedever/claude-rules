@@ -357,29 +357,19 @@ a:hover { text-decoration: underline; }
 }
 .code .cp:hover { color: #cdd6f4; border-color: var(--accent); }
 
-/* --- Tools list --- */
-.tools-list { display: flex; flex-direction: column; gap: 1.2rem; }
+/* --- Tools grid --- */
+.tools { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.8rem; }
 
-.tool-row {
-  border: 1px solid var(--border); border-radius: var(--radius);
-  background: var(--bg-card); box-shadow: var(--shadow);
-  overflow: hidden; transition: all 0.2s;
+.tool {
+  padding: 1.2rem 0.8rem; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--bg-card);
+  text-align: center; box-shadow: var(--shadow); transition: all 0.2s;
 }
-.tool-row:hover { box-shadow: var(--shadow-lg); }
+.tool:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.tool-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.tool-file { font-family: var(--mono); font-size: 0.72rem; color: var(--text-3); }
 
-.tool-info {
-  display: flex; align-items: center; gap: 1rem;
-  padding: 0.8rem 1.2rem;
-}
-.tool-name { font-weight: 700; font-size: 0.95rem; }
-.tool-file { font-family: var(--mono); font-size: 0.75rem; color: var(--text-3); }
-
-.tool-cmd {
-  margin: 0; border-radius: 0; border: none;
-  border-top: 1px solid var(--border);
-  font-size: 0.78rem; padding: 0.6rem 4.5rem 0.6rem 1.2rem;
-  line-height: 1.5;
-}
+.tools-example { margin-top: 2rem; }
 
 /* --- Footer --- */
 .footer {
@@ -403,13 +393,14 @@ a:hover { text-decoration: underline; }
   .nav-divider { display: none; }
   .container { padding: 0 1.2rem; }
   .cards, .compare { grid-template-columns: 1fr; }
+  .tools { grid-template-columns: 1fr 1fr; }
   .step { flex-direction: column; gap: 0.6rem; }
   .section, .section-alt { padding: 3.5rem 0; }
 }
 
 @media (max-width: 480px) {
   .hero { padding: 5rem 1.2rem 3rem; }
-  .tool-info { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+  .tools { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -591,26 +582,27 @@ a:hover { text-decoration: underline; }
       <h2 data-i18n="tools.title"></h2>
       <p data-i18n="tools.desc"></p>
     </div>
-    <div class="tools-list">
-      <div class="tool-row">
-        <div class="tool-info"><span class="tool-name">Claude Code</span><span class="tool-file">CLAUDE.md</span></div>
-        <div class="code tool-cmd">cat base/core.md base/git.md languages/typescript.md frameworks/vue.md > CLAUDE.md<button class="cp" onclick="copyCode(this)">Copy</button></div>
-      </div>
-      <div class="tool-row">
-        <div class="tool-info"><span class="tool-name">Cursor</span><span class="tool-file">.cursorrules</span></div>
-        <div class="code tool-cmd">cat base/core.md base/git.md languages/typescript.md frameworks/react.md > .cursorrules<button class="cp" onclick="copyCode(this)">Copy</button></div>
-      </div>
-      <div class="tool-row">
-        <div class="tool-info"><span class="tool-name">Antigravity</span><span class="tool-file">.antigravity/rules.md</span></div>
-        <div class="code tool-cmd">mkdir -p .antigravity && cat base/core.md base/git.md languages/python.md > .antigravity/rules.md<button class="cp" onclick="copyCode(this)">Copy</button></div>
-      </div>
-      <div class="tool-row">
-        <div class="tool-info"><span class="tool-name">GitHub Copilot</span><span class="tool-file">.github/copilot-instructions.md</span></div>
-        <div class="code tool-cmd">mkdir -p .github && cat base/core.md base/git.md languages/java.md > .github/copilot-instructions.md<button class="cp" onclick="copyCode(this)">Copy</button></div>
-      </div>
-      <div class="tool-row">
-        <div class="tool-info"><span class="tool-name">Codex</span><span class="tool-file">AGENTS.md</span></div>
-        <div class="code tool-cmd">cat base/core.md base/git.md languages/go.md > AGENTS.md<button class="cp" onclick="copyCode(this)">Copy</button></div>
+    <div class="tools">
+      <div class="tool"><div class="tool-name">Claude Code</div><div class="tool-file">CLAUDE.md</div></div>
+      <div class="tool"><div class="tool-name">Cursor</div><div class="tool-file">.cursorrules</div></div>
+      <div class="tool"><div class="tool-name">Antigravity</div><div class="tool-file">.antigravity/rules.md</div></div>
+      <div class="tool"><div class="tool-name">Copilot</div><div class="tool-file">.github/copilot-instructions.md</div></div>
+      <div class="tool"><div class="tool-name">Codex</div><div class="tool-file">AGENTS.md</div></div>
+    </div>
+
+    <div class="tools-example">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-title">bash &mdash; ~/claude-rules</span>
+        </div>
+        <div class="terminal-body">
+          <span class="dim"># Clone and combine rules for your project</span><br>
+          <span class="prompt">$</span> git clone https://github.com/lifedever/claude-rules.git<br>
+          <span class="prompt">$</span> cat base/core.md base/git.md languages/typescript.md frameworks/vue.md > <span class="output">CLAUDE.md</span>
+        </div>
       </div>
     </div>
   </div>
