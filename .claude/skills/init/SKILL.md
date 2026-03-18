@@ -1,5 +1,5 @@
 ---
-name: init-claude-rules
+name: init
 description: >
   Initialize or update CLAUDE.md coding standards for any project by auto-detecting tech stack
   and assembling rules from the claude-rules template library.

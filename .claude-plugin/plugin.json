@@ -6,5 +6,5 @@
     "name": "lifedever"
   },
   "license": "MIT",
-  "skills": ["./.claude/skills/init-claude-rules"]
+  "skills": ["./.claude/skills/init"]
 }

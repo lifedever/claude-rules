@@ -74,7 +74,7 @@ claude plugin install claude-rules-init@claude-rules
 **第 3 步：重启 Claude Code**，然后在任意项目中运行：
 
 ```
-/init-claude-rules
+/claude-rules-init:init
 ```
 
 插件会：
