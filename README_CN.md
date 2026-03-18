@@ -28,7 +28,9 @@ claude-rules/
 │   ├── swift.md            # guard let、async/await、actor、Protocol
 │   ├── python.md           # ruff、类型标注、Protocol、uv/poetry
 │   ├── html.md             # 语义化标签、可访问性、禁止 div 滥用
-│   └── css.md              # 自定义属性、Flexbox/Grid、BEM、现代特性
+│   ├── css.md              # 自定义属性、Flexbox/Grid、BEM、现代特性
+│   ├── go.md               # 错误包装、小接口、结构化并发
+│   └── rust.md             # 所有权/借用、thiserror/anyhow、迭代器、Clippy
 │
 └── frameworks/             # 按框架选择
     ├── vue.md              # script setup、ref vs reactive、composable 结构

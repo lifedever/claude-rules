@@ -33,6 +33,8 @@ Scan the current working directory to identify languages and frameworks:
 | `pyproject.toml` or `requirements.txt` | `languages/python.md` |
 | `*.html` files | `languages/html.md` |
 | `*.css`/`*.scss` files | `languages/css.md` |
+| `go.mod` or `*.go` files | `languages/go.md` |
+| `Cargo.toml` or `*.rs` files | `languages/rust.md` |
 
 Present detection results and ask user to confirm or adjust before proceeding.
 

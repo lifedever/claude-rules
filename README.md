@@ -28,7 +28,9 @@ claude-rules/
 │   ├── swift.md            # guard let, async/await, actor, Protocol
 │   ├── python.md           # ruff, type annotations, Protocol, uv/poetry
 │   ├── html.md             # Semantic tags, accessibility, no div soup
-│   └── css.md              # Custom properties, Flexbox/Grid, BEM, modern features
+│   ├── css.md              # Custom properties, Flexbox/Grid, BEM, modern features
+│   ├── go.md               # Error wrapping, small interfaces, structured concurrency
+│   └── rust.md             # Ownership/borrowing, thiserror/anyhow, iterators, Clippy
 │
 └── frameworks/             # Pick by framework
     ├── vue.md              # script setup, ref vs reactive, composable patterns
