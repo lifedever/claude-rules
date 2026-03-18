@@ -5,5 +5,6 @@
   "author": {
     "name": "lifedever"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "skills": ["./.claude/skills/init-claude-rules"]
 }
