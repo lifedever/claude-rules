@@ -59,7 +59,7 @@
   }
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 60px; }
 body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -352,14 +352,18 @@ a:hover { text-decoration: underline; }
 <nav class="nav">
   <a href="#" class="nav-brand">&#128218; Claude Rules</a>
   <div class="nav-right">
+    <a href="#problem" class="nav-link" data-i18n="problem.label"></a>
+    <a href="#diff" class="nav-link" data-i18n="diff.label"></a>
+    <a href="#arch" class="nav-link" data-i18n="arch.label"></a>
     <a href="#install" class="nav-link" data-i18n="install.label"></a>
+    <a href="#compat" class="nav-link" data-i18n="tools.label"></a>
     <a href="https://github.com/lifedever/claude-rules" class="nav-link" target="_blank">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
       GitHub
     </a>
     <div class="nav-divider"></div>
     <div class="lang-drop" id="langDrop">
-      <button class="lang-btn" id="langBtn" onclick="document.getElementById('langDrop').classList.toggle('open')">EN</button>
+      <button class="lang-btn" id="langBtn" onclick="document.getElementById('langDrop').classList.toggle('open')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> <span id="langLabel">EN</span></button>
       <ul class="lang-list" id="langList"></ul>
     </div>
   </div>
@@ -379,7 +383,7 @@ a:hover { text-decoration: underline; }
   </div>
 </section>
 
-<div class="section">
+<div class="section" id="problem">
   <div class="container reveal">
     <div class="section-head">
       <div class="label" data-i18n="problem.label"></div>
@@ -395,7 +399,7 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<div class="section-alt">
+<div class="section-alt" id="diff">
   <div class="container reveal">
     <div class="section-head">
       <div class="label" data-i18n="diff.label"></div>
@@ -425,7 +429,7 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="arch">
   <div class="container reveal">
     <div class="section-head">
       <div class="label" data-i18n="arch.label"></div>
@@ -499,7 +503,7 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<div class="section-alt">
+<div class="section-alt" id="compat">
   <div class="container reveal">
     <div class="section-head">
       <div class="label" data-i18n="tools.label"></div>
@@ -761,7 +765,7 @@ function setLang(lang) {
     if (t[key]) el.innerHTML = t[key];
   });
   const current = LANGS.find(l => l.code === lang);
-  document.getElementById('langBtn').textContent = current ? current.label : 'EN';
+  document.getElementById('langLabel').textContent = current ? current.label : 'EN';
   document.querySelectorAll('.lang-list li').forEach(li => {
     li.classList.toggle('active', li.dataset.lang === lang);
   });
