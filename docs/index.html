@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Rules — Coding Standards for AI Assistants</title>
+<meta name="description" content="Stop AI from copying bad habits. Actionable coding standards for Claude Code, Cursor, Windsurf, and GitHub Copilot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-card-hover: #1a1a28;
+  --text: #e8e6e3;
+  --text-dim: #8a8895;
+  --accent: #ff6b35;
+  --accent-glow: rgba(255, 107, 53, 0.15);
+  --green: #4ade80;
+  --red: #f87171;
+  --blue: #60a5fa;
+  --border: #2a2a3a;
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Hero --- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s ease both;
+}
+
+.badge-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+h1 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+h1 .highlight {
+  background: linear-gradient(135deg, var(--accent), #ff9a6c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 300;
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #ff8555;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.3);
+  text-decoration: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+/* --- Sections --- */
+section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.section-desc {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  max-width: 600px;
+  margin-bottom: 3rem;
+}
+
+/* --- Problem --- */
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.problem-card {
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: all 0.3s;
+}
+.problem-card:hover {
+  background: var(--bg-card-hover);
+  border-color: #3a3a4a;
+  transform: translateY(-2px);
+}
+
+.problem-card .icon {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.problem-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.problem-card p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+/* --- Compare --- */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.compare-panel {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.compare-panel h3 {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.compare-panel.bad h3 { color: var(--red); }
+.compare-panel.good h3 { color: var(--green); }
+
+.compare-panel ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.compare-panel li {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.compare-panel.bad li::before {
+  content: '✗';
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-weight: 700;
+}
+
+.compare-panel.good li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* --- Architecture --- */
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.arch-layer {
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all 0.3s;
+  cursor: default;
+}
+.arch-layer:first-child { border-radius: 12px 12px 0 0; }
+.arch-layer:last-child { border-radius: 0 0 12px 12px; }
+.arch-layer:not(:last-child) { border-bottom: none; }
+
+.arch-layer:hover {
+  background: var(--bg-card-hover);
+  transform: scale(1.01);
+}
+
+.arch-layer h3 {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.arch-layer p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.arch-layer.base { background: rgba(255, 107, 53, 0.08); }
+.arch-layer.base h3 { color: var(--accent); }
+.arch-layer.lang { background: rgba(96, 165, 250, 0.08); }
+.arch-layer.lang h3 { color: var(--blue); }
+.arch-layer.fw { background: rgba(74, 222, 128, 0.08); }
+.arch-layer.fw h3 { color: var(--green); }
+
+/* --- Stack Tags --- */
+.stack-section { text-align: center; }
+
+.stack-group {
+  margin-bottom: 2rem;
+}
+
+.stack-group-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.stack-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.stack-tag {
+  padding: 0.5rem 1.2rem;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: all 0.3s;
+  cursor: default;
+}
+.stack-tag:hover {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+/* --- Install --- */
+.install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 700px;
+}
+
+.install-step {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.step-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.code-block {
+  background: #0d0d14;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--green);
+  overflow-x: auto;
+  line-height: 1.8;
+  position: relative;
+}
+
+.code-block .comment { color: var(--text-dim); }
+
+.code-block .copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.code-block .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+
+/* --- Tools --- */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.tool-card {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+  text-align: center;
+  transition: all 0.3s;
+}
+.tool-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.tool-card .tool-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.tool-card .tool-file {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* --- Footer --- */
+footer {
+  text-align: center;
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+footer a { color: var(--accent); }
+
+/* --- Animations --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .problem-grid, .compare { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: 1fr 1fr; }
+  section { padding: 4rem 1.5rem; }
+  .install-step { flex-direction: column; gap: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+  .tools-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Open Source &middot; MIT License
+    </div>
+    <h1>Stop AI from<br>copying <span class="highlight">bad code</span></h1>
+    <p class="hero-sub">Actionable coding standards that AI can actually follow. Auto-detect your tech stack, generate rules in seconds.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/lifedever/claude-rules" class="btn btn-primary" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="#install" class="btn btn-ghost">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="fade-in">
+  <div class="section-label">The Problem</div>
+  <h2>AI mimics your worst habits</h2>
+  <p class="section-desc">When AI reads your legacy code, it thinks that's the standard. It copies every anti-pattern it finds.</p>
+
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="icon">&#128163;</div>
+      <h3>God Classes keep growing</h3>
+      <p>800-line file? AI adds 50 more lines instead of refactoring into smaller modules.</p>
+    </div>
+    <div class="problem-card">
+      <div class="icon">&#128165;</div>
+      <h3>any spreads like a virus</h3>
+      <p>One any in your codebase, AI uses it everywhere. Type safety goes out the window.</p>
+    </div>
+    <div class="problem-card">
+      <div class="icon">&#128296;</div>
+      <h3>Callback hell multiplies</h3>
+      <p>5-level nesting? AI nests 6. It treats your worst code as the template.</p>
+    </div>
+    <div class="problem-card">
+      <div class="icon">&#9888;&#65039;</div>
+      <h3>Outdated patterns persist</h3>
+      <p>Using ObservableObject in Swift 6? Old enum in TypeScript? AI follows suit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Compare -->
+<section class="fade-in">
+  <div class="section-label">The Difference</div>
+  <h2>Vague vs. actionable</h2>
+  <p class="section-desc">Most coding rules are too vague for AI to execute. Ours are concrete directives with code examples.</p>
+
+  <div class="compare">
+    <div class="compare-panel bad">
+      <h3>&#10060; Other rule libraries</h3>
+      <ul>
+        <li>Use proper error handling</li>
+        <li>Implement appropriate caching</li>
+        <li>Use proper navigation methods</li>
+        <li>Keep components organized</li>
+        <li>Follow best practices</li>
+      </ul>
+    </div>
+    <div class="compare-panel good">
+      <h3>&#9989; claude-rules</h3>
+      <ul>
+        <li>Functions &le;30 lines, files &le;300 lines</li>
+        <li>ref for primitives, reactive for objects</li>
+        <li>No any &mdash; use unknown then narrow</li>
+        <li>No barrel exports (causes circular deps)</li>
+        <li>as const + union type, not enum</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Architecture -->
+<section class="fade-in">
+  <div class="section-label">Architecture</div>
+  <h2>Three layers, pick what you need</h2>
+  <p class="section-desc">Combine base rules with language-specific and framework-specific standards. Only include what your project uses.</p>
+
+  <div class="arch-layers">
+    <div class="arch-layer fw">
+      <h3>Framework</h3>
+      <p>Vue &middot; React &middot; SwiftUI &middot; Spring Boot &middot; Tauri</p>
+    </div>
+    <div class="arch-layer lang">
+      <h3>Language</h3>
+      <p>TypeScript &middot; JavaScript &middot; Java &middot; Kotlin &middot; Swift &middot; Python &middot; Go &middot; Rust &middot; HTML &middot; CSS</p>
+    </div>
+    <div class="arch-layer base">
+      <h3>Base (always included)</h3>
+      <p>Legacy code attitude &middot; Quality metrics &middot; Naming &middot; Architecture &middot; Git conventions</p>
+    </div>
+  </div>
+</section>
+
+<!-- Supported Stacks -->
+<section class="stack-section fade-in">
+  <div class="section-label">Supported Stacks</div>
+  <h2>10 languages, 5 frameworks</h2>
+  <p class="section-desc" style="margin-left:auto;margin-right:auto;">And growing. PRs welcome.</p>
+
+  <div class="stack-group">
+    <div class="stack-group-label">Languages</div>
+    <div class="stack-tags">
+      <span class="stack-tag">TypeScript</span>
+      <span class="stack-tag">JavaScript</span>
+      <span class="stack-tag">Java</span>
+      <span class="stack-tag">Kotlin</span>
+      <span class="stack-tag">Swift</span>
+      <span class="stack-tag">Python</span>
+      <span class="stack-tag">Go</span>
+      <span class="stack-tag">Rust</span>
+      <span class="stack-tag">HTML</span>
+      <span class="stack-tag">CSS</span>
+    </div>
+  </div>
+  <div class="stack-group">
+    <div class="stack-group-label">Frameworks</div>
+    <div class="stack-tags">
+      <span class="stack-tag">Vue 3</span>
+      <span class="stack-tag">React</span>
+      <span class="stack-tag">SwiftUI</span>
+      <span class="stack-tag">Spring Boot</span>
+      <span class="stack-tag">Tauri</span>
+    </div>
+  </div>
+</section>
+
+<!-- Install -->
+<section class="fade-in" id="install">
+  <div class="section-label">Get Started</div>
+  <h2>Up and running in 60 seconds</h2>
+
+  <div class="install-steps">
+    <div class="install-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Add marketplace & install plugin</h3>
+        <div class="code-block">
+          <span class="comment"># Add the marketplace</span><br>
+          claude plugin marketplace add lifedever/claude-rules<br><br>
+          <span class="comment"># Install the plugin</span><br>
+          claude plugin install init-claude-rules@claude-rules
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="install-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Restart Claude Code</h3>
+        <p style="color:var(--text-dim);font-size:0.95rem;">The plugin needs a restart to register the skill.</p>
+      </div>
+    </div>
+
+    <div class="install-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Run in any project</h3>
+        <div class="code-block">
+          /init-rules
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Other Tools -->
+<section class="fade-in">
+  <div class="section-label">Works Everywhere</div>
+  <h2>Not just Claude Code</h2>
+  <p class="section-desc">Plain Markdown rules work with any AI coding tool.</p>
+
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-name">Claude Code</div>
+      <div class="tool-file">CLAUDE.md</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Cursor</div>
+      <div class="tool-file">.cursorrules</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Windsurf</div>
+      <div class="tool-file">.windsurfrules</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">GitHub Copilot</div>
+      <div class="tool-file">.github/copilot-instructions.md</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Codex</div>
+      <div class="tool-file">AGENTS.md</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>
+    <a href="https://github.com/lifedever/claude-rules" target="_blank">GitHub</a>
+    &nbsp;&middot;&nbsp;
+    MIT License
+    &nbsp;&middot;&nbsp;
+    Made with Claude Code
+  </p>
+</footer>
+
+<script>
+// Scroll fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Copy button
+function copyCode(btn) {
+  const block = btn.parentElement;
+  const text = block.innerText.replace('Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+</script>
+
+</body>
+</html>
